@@ -20,6 +20,7 @@ import {
   X,
 } from '@phosphor-icons/react'
 import { FooterSocialLinks, socialLinks } from './components/footer-social-links'
+import WorkflowReel from './components/workflow-reel'
 import '@fontsource-variable/manrope'
 import './styles.css'
 
@@ -647,6 +648,18 @@ function ServiceShowcase() {
   )
 }
 
+function WorkflowFilm() {
+  return (
+    <section className="workflow-film" id="im-alltag" aria-labelledby="workflow-film-title">
+      <div className="workflow-film-head">
+        <ScrollFillHeading id="workflow-film-title" className="workflow-scroll-title" text="Was sich für euch ändert." fillColor="#1d3030" mutedColor="rgba(29, 48, 48, .24)" />
+        <p>Wir bauen euren Auftritt, machen euch für neue Kunden sichtbar und nehmen euch mit KI-Werkzeugen Routine ab.</p>
+      </div>
+      <WorkflowReel />
+    </section>
+  )
+}
+
 function CaseStudiesPlaceholder() {
   return (
     <section className="proof-placeholder" id="fallstudien" aria-labelledby="proof-placeholder-title">
@@ -1041,7 +1054,7 @@ function App() {
     }
   }, [])
 
-  return <><a className="skip-link" href="#main-content">Zum Hauptinhalt springen</a><main id="main-content"><Hero /><StudioImpact /><ReferencesSequence /><ServiceShowcase /><CaseStudiesPlaceholder /><Contact /><FAQ /><Blog /><Footer /></main></>
+  return <><a className="skip-link" href="#main-content">Zum Hauptinhalt springen</a><main id="main-content"><Hero /><StudioImpact /><ReferencesSequence /><ServiceShowcase /><WorkflowFilm /><CaseStudiesPlaceholder /><Contact /><FAQ /><Blog /><Footer /></main></>
 }
 
 createRoot(document.getElementById('root')).render(<App />)
