@@ -2568,7 +2568,7 @@ input { caret-color: var(--accent); }
 .rk-s2-claim { position: absolute; top: 468px; left: 96px; font-size: 13px; }
 .rk-s2-claim b { display: block; margin-bottom: 8px; font-size: 80px; font-weight: 800; letter-spacing: -.05em; line-height: .9; }
 .rk-browser { width: 636px; height: 400px; position: absolute; top: 112px; left: 548px; overflow: hidden; border: 1.5px solid #2b2114; border-radius: 14px; background: #f5f1e8; }
-.rk-browser-bar { height: 34px; position: relative; display: flex; align-items: center; gap: 6px; padding: 0 14px; border-bottom: 1.5px solid #2b2114; background: #f2a146; }
+.rk-browser-bar { height: 34px; position: relative; display: flex; align-items: center; gap: 6px; padding: 0 14px; border-bottom: 1.5px solid #2b2114; background: #fff; }
 .rk-browser-bar i { width: 9px; height: 9px; border: 1.5px solid #2b2114; border-radius: 50%; }
 .rk-browser-url { position: absolute; left: 50%; font-size: 11px; letter-spacing: .1em; transform: translateX(-50%); }
 .rk-browser-count { position: absolute; right: 16px; font-size: 11px; letter-spacing: .1em; }
