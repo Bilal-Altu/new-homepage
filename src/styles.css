@@ -2606,7 +2606,7 @@ input { caret-color: var(--accent); }
 .rk-s4-label { font-family: 'Manrope Variable', Manrope, sans-serif; font-size: 21px; font-weight: 500; letter-spacing: -.01em; }
 .rk-s4-icon { width: 24px; height: 24px; opacity: .72; }
 .rk-s4-track { height: 1.5px; position: relative; background: rgba(243, 241, 235, .28); }
-.rk-s4-run { position: absolute; inset: 0; }
+.rk-s4-run { position: absolute; inset: 0; will-change: transform; }
 .rk-s4-run i { width: 26px; height: 26px; position: absolute; top: -12.25px; right: -13px; border-radius: 50%; background: #f3f1eb; }
 .rk-s4-row:nth-of-type(3) .rk-s4-run i { background: #b9e2d8; }
 .rk-s4-row:nth-of-type(4) .rk-s4-run i { background: #f2a146; }

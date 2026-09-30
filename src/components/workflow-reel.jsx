@@ -57,7 +57,7 @@ export const reelCopy = {
   fin: {
     word: 'SIDETWO',
     line: 'digitale Auftritte, die arbeiten.',
-    meta: ['WEBSITES · AUTOMATISIERUNG · KI-AGENTEN', 'MANNHEIM / 2026', 'SIDETWO.DE'],
+    meta: ['WEBSITES · AUTOMATISIERUNG · KI-AGENTEN', 'BÜRSTADT / 2026', 'SIDETWO.DE'],
   },
   summary: 'Film: Gute Arbeit, nur kennt sie kaum jemand. SideTwo baut den Auftritt (Ausschnitte echter Kundenseiten), macht den Betrieb in der Region für neue Kunden sichtbar und nimmt mit KI-Werkzeugen Routine ab: Anfragen, Termine, Angebote, Infos. Ergebnis: gefunden, einfacher, mehr Zeit für das Wesentliche.',
 }
@@ -79,6 +79,7 @@ const EXPO = 'cubic-bezier(.16,1,.3,1)'
 const EXPO_IN = 'cubic-bezier(.7,0,.84,0)'
 const INOUT = 'cubic-bezier(.65,0,.35,1)'
 const BACK = 'cubic-bezier(.34,1.56,.64,1)'
+const GLIDE = 'cubic-bezier(.45,.05,.25,1)'
 const LINEAR = 'linear'
 const CUT = 0.001 // harter Schnitt innerhalb einer Spur
 
@@ -106,7 +107,8 @@ export function reelTracks() {
   const siteStarts = [3.75, 5.0, 5.55, 6.1]
   const siteEnds = [5.0, 5.55, 6.1, 7.6]
   const townAt = TOWNS.map((_, i) => 8.55 + i * 0.2)
-  const runs = [[12.2, 0.8, EXPO], [12.55, 0.8, INOUT], [12.9, 0.75, BACK], [13.25, 0.8, EXPO]]
+  // Weiche, gleichmäßige Fahrt von links nach rechts; harte Bremskurven wirkten ruckelig
+  const runs = [12.1, 12.4, 12.7, 13.0].map((t) => [t, 1.4, GLIDE])
   return {
     // Unsichtbarer Taktgeber für die harten Schnitte
     clock: [[0, { opacity: 0 }, LINEAR], [BASE_TOTAL, { opacity: 0 }]],
