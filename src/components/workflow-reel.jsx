@@ -1,16 +1,15 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { CalendarCheck, ChatCircleDots, Check, FileText, Pause, Play, Stack } from '@phosphor-icons/react'
-import '@fontsource-variable/archivo/wdth.css'
-import '@fontsource/instrument-serif/latin-400-italic.css'
 
 const asset = (path) => `${import.meta.env.BASE_URL}${path}`
 
 // Ein Film über das, was SideTwo macht: Websites bauen, neue Kunden erreichen, mit KI den Alltag leichter machen.
-// Machart eines Motion-Reels: vollflächige Farbkapitel, harte Schnitte, schwere Schrift, feines HUD.
-// Alle Zeiten in Sekunden; die Schleife dauert REEL_TOTAL.
-export const REEL_TOTAL = 20.4
-const STILL_AT = 11.3 // Standbild bei reduzierter Bewegung: Karte mit allen erreichten Orten
-const FPS = 30
+// Machart eines Motion-Reels: vollflächige Farbkapitel, harte Schnitte, schwere Schrift – durchgehend Manrope.
+// Die Spuren sind in Grundsekunden geschrieben; TEMPO dehnt den ganzen Film gleichmäßig.
+const BASE_TOTAL = 21.2
+const TEMPO = 1.3
+export const REEL_TOTAL = BASE_TOTAL * TEMPO // echte Sekunden
+const STILL_AT = 11.3 * TEMPO // Standbild bei reduzierter Bewegung: Karte mit allen erreichten Orten
 
 // Karte der Region, Abstände in px vom Betrieb aus (Mitte der Karte), grob nach Lage
 const TOWNS = [
@@ -24,7 +23,6 @@ const TOWNS = [
 ]
 
 export const reelCopy = {
-  hud: 'SIDETWO — WEBSITES + KI',
   hook: { word: ['GUTE', 'ARBEIT'], line: ['Nur', 'kennt', 'sie', 'kaum', 'jemand.'] },
   web: {
     head: [['Wir', 'bauen'], ['euren', 'Auftritt.']],
@@ -64,19 +62,18 @@ export const reelCopy = {
   summary: 'Film: Gute Arbeit, nur kennt sie kaum jemand. SideTwo baut den Auftritt (Ausschnitte echter Kundenseiten), macht den Betrieb in der Region für neue Kunden sichtbar und nimmt mit KI-Werkzeugen Routine ab: Anfragen, Termine, Angebote, Infos. Ergebnis: gefunden, einfacher, mehr Zeit für das Wesentliche.',
 }
 
-// Szenen mit harten Schnitten; Kapitelnummer und Titel für das HUD
+// Szenen mit harten Schnitten, Beginn in Grundsekunden
 export const scenes = [
-  { id: 's1a', at: 0, n: 1, title: 'HEUTE', tone: 'dark' },
-  { id: 's1b', at: 1.7, n: 1, title: 'HEUTE', tone: 'dark' },
-  { id: 's2', at: 3.6, n: 2, title: 'WEBSITE', tone: 'light' },
-  { id: 's3', at: 7.6, n: 3, title: 'NEUE KUNDEN', tone: 'light' },
-  { id: 's4', at: 11.6, n: 4, title: 'KI IM ALLTAG', tone: 'dark' },
-  { id: 's5a', at: 15.4, n: 5, title: 'ERGEBNIS', tone: 'dark' },
-  { id: 's5b', at: 15.95, n: 5, title: 'ERGEBNIS', tone: 'light' },
-  { id: 's5c', at: 16.5, n: 5, title: 'ERGEBNIS', tone: 'dark' },
-  { id: 's6', at: 17.6, n: 6, title: 'SIDETWO', tone: 'light' },
+  { id: 's1a', at: 0 },
+  { id: 's1b', at: 1.7 },
+  { id: 's2', at: 3.6 },
+  { id: 's3', at: 7.6 },
+  { id: 's4', at: 11.6 },
+  { id: 's5a', at: 15.4 },
+  { id: 's5b', at: 16.2 },
+  { id: 's5c', at: 17.0 },
+  { id: 's6', at: 18.3 },
 ]
-const CHAPTERS = 6
 
 const EXPO = 'cubic-bezier(.16,1,.3,1)'
 const EXPO_IN = 'cubic-bezier(.7,0,.84,0)'
@@ -111,8 +108,8 @@ export function reelTracks() {
   const townAt = TOWNS.map((_, i) => 8.55 + i * 0.2)
   const runs = [[12.2, 0.8, EXPO], [12.55, 0.8, INOUT], [12.9, 0.75, BACK], [13.25, 0.8, EXPO]]
   return {
-    // Fortschrittslinie im HUD, zugleich Taktgeber für Kapitel und Timecode
-    'hud-progress': [[0, { transform: 'scaleX(0)' }, LINEAR], [REEL_TOTAL, { transform: 'scaleX(1)' }]],
+    // Unsichtbarer Taktgeber für die harten Schnitte
+    clock: [[0, { opacity: 0 }, LINEAR], [BASE_TOTAL, { opacity: 0 }]],
 
     // 01 Heute: „GUTE ARBEIT.“, dann ein einzelner Punkt in einem Feld aus Punkten
     's1a-type': slam(0.1, 42),
@@ -157,16 +154,16 @@ export function reelTracks() {
 
     // 05 Ergebnis: kinetische Schrift
     's5a-type': slam(15.4, 38),
-    's5b-row': Array.from({ length: 7 }, (_, i) => [[15.95, { transform: `translate3d(${i % 2 ? -12 : -2}%, 0, 0)` }, LINEAR], [16.5, { transform: `translate3d(${i % 2 ? -2 : -12}%, 0, 0)` }]]),
-    's5c-type': slam(16.5, -34),
-    's5c-line': rise(16.95, { dy: 20, dur: 0.6, blur: 6 }),
+    's5b-row': Array.from({ length: 7 }, (_, i) => [[16.2, { transform: `translate3d(${i % 2 ? -12 : -2}%, 0, 0)` }, LINEAR], [17.0, { transform: `translate3d(${i % 2 ? -2 : -12}%, 0, 0)` }]]),
+    's5c-type': slam(17.0, -34),
+    's5c-line': rise(17.45, { dy: 20, dur: 0.6, blur: 6 }),
 
     // 06 SideTwo: Zeichen, Wortmarke, Zeile
-    's6-mark': [[17.65, { opacity: 0, transform: 'rotate(-140deg) scale(.4)' }, BACK], [18.3, { opacity: 1, transform: 'rotate(0deg) scale(1)' }]],
-    's6-type': [[17.75, { clipPath: 'inset(0 0 100% 0)', transform: 'translate3d(0, 34%, 0)' }, EXPO], [18.4, { clipPath: 'inset(0 0 0% 0)', transform: 'translate3d(0, 0%, 0)' }]],
-    's6-line': rise(18.3, { dy: 24, dur: 0.7, blur: 8 }),
-    's6-rule': [[18.55, { transform: 'scaleX(0)' }, INOUT], [19.3, { transform: 'scaleX(1)' }]],
-    's6-meta': Array.from({ length: 3 }, (_, i) => appear(18.8 + i * 0.12, 0.45)),
+    's6-mark': [[18.35, { opacity: 0, transform: 'rotate(-140deg) scale(.4)' }, BACK], [19.0, { opacity: 1, transform: 'rotate(0deg) scale(1)' }]],
+    's6-type': [[18.45, { clipPath: 'inset(0 0 100% 0)', transform: 'translate3d(0, 34%, 0)' }, EXPO], [19.1, { clipPath: 'inset(0 0 0% 0)', transform: 'translate3d(0, 0%, 0)' }]],
+    's6-line': rise(19.0, { dy: 24, dur: 0.7, blur: 8 }),
+    's6-rule': [[19.25, { transform: 'scaleX(0)' }, INOUT], [20.0, { transform: 'scaleX(1)' }]],
+    's6-meta': Array.from({ length: 3 }, (_, i) => appear(19.5 + i * 0.12, 0.45)),
   }
 }
 
@@ -190,34 +187,24 @@ function toKeyframes(frames, total) {
   return filled
 }
 
-export function animateTracks(root, tracks, { total, iterations = Infinity }) {
+// total: Länge der Spuren in Grundsekunden; duration: echte Laufzeit in Sekunden
+export function animateTracks(root, tracks, { total, duration = total, iterations = Infinity }) {
   const animations = []
   for (const [name, spec] of Object.entries(tracks)) {
     root.querySelectorAll(`[data-rk="${name}"]`).forEach((el, i) => {
       // Listen von Spuren gelten je Element (Wörter, Orte, Zeilen); sonst dieselbe Spur für alle.
       const frames = Array.isArray(spec[0]?.[0]) ? spec[i] : spec
-      if (frames) animations.push(el.animate(toKeyframes(frames, total), { duration: total * 1000, iterations, fill: 'both' }))
+      if (frames) animations.push(el.animate(toKeyframes(frames, total), { duration: duration * 1000, iterations, fill: 'both' }))
     })
   }
   return animations
 }
 
-// Szene, HUD-Kapitel und Timecode folgen der Zeit; harte Schnitte gehen so bildgenau.
+// Die sichtbare Szene folgt der Zeit (echte Sekunden); harte Schnitte gehen so bildgenau.
 export function applyReelTime(root, seconds) {
-  const t = ((seconds % REEL_TOTAL) + REEL_TOTAL) % REEL_TOTAL
+  const t = (((seconds / TEMPO) % BASE_TOTAL) + BASE_TOTAL) % BASE_TOTAL
   const scene = [...scenes].reverse().find((s) => t >= s.at)
-  if (root.dataset.scene !== scene.id) {
-    root.dataset.scene = scene.id
-    root.dataset.tone = scene.tone
-    root.querySelector('[data-hud="chapter"]').textContent = `[${String(scene.n).padStart(2, '0')} / ${scene.title}]`
-    root.querySelector('[data-hud="count"]').textContent = `KAPITEL ${scene.n}/${CHAPTERS}`
-    root.querySelectorAll('[data-hud="box"]').forEach((box, i) => box.classList.toggle('is-on', i < scene.n))
-  }
-  const frames = Math.floor(t * FPS)
-  const pad = (n) => String(n).padStart(2, '0')
-  const time = `00:00:${pad(Math.floor(frames / FPS))}:${pad(frames % FPS)}`
-  const clock = root.querySelector('[data-hud="time"]')
-  if (clock.textContent !== time) clock.textContent = time
+  if (root.dataset.scene !== scene.id) root.dataset.scene = scene.id
 }
 
 function SideTwoMark() {
@@ -235,7 +222,7 @@ export function ReelCanvas({ canvasRef }) {
   const { hook, web, reach, daily, result, fin } = reelCopy
   const patternLine = Array.from({ length: 6 }, () => result.pattern).join(' ')
   return (
-    <div className="rk-canvas" ref={canvasRef} data-scene="s1a" data-tone="dark">
+    <div className="rk-canvas" ref={canvasRef} data-scene="s1a">
       <div className="rk-bg" />
 
       <div className="rk-scene rk-s1a"><p className="rk-heavy rk-slam" data-rk="s1a-type"><span>{hook.word[0]}</span><span>{hook.word[1]}<b>.</b></span></p></div>
@@ -243,11 +230,11 @@ export function ReelCanvas({ canvasRef }) {
         <span className="rk-field" data-rk="s1b-field" />
         <span className="rk-s1b-ring" data-rk="s1b-ring" />
         <span className="rk-s1b-dot" data-rk="s1b-dot" />
-        <p className="rk-serif rk-s1b-line">{hook.line.map((w, i) => <span key={i} data-rk="s1b-word">{w}</span>)}</p>
+        <p className="rk-soft rk-s1b-line">{hook.line.map((w, i) => <span key={i} data-rk="s1b-word">{w}</span>)}</p>
       </div>
 
       <div className="rk-scene rk-s2">
-        <h3 className="rk-serif rk-s2-head">{words(web.head, 's2-word')}</h3>
+        <h3 className="rk-soft rk-s2-head">{words(web.head, 's2-word')}</h3>
         <p className="rk-caps rk-s2-parts" data-rk="s2-parts">{web.parts}</p>
         <p className="rk-caps rk-s2-claim" data-rk="s2-claim"><b>{web.claim.split(' ')[0]}</b> {web.claim.split(' ').slice(1).join(' ')}</p>
         <div className="rk-browser" data-rk="s2-browser">
@@ -263,7 +250,7 @@ export function ReelCanvas({ canvasRef }) {
       </div>
 
       <div className="rk-scene rk-s3">
-        <h3 className="rk-serif rk-s3-head">{words(reach.head, 's3-word')}</h3>
+        <h3 className="rk-soft rk-s3-head">{words(reach.head, 's3-word')}</h3>
         <p className="rk-caps rk-s3-parts" data-rk="s3-parts">{reach.parts}</p>
         <div className="rk-map">
           <span className="rk-field rk-field-light" data-rk="s3-field" />
@@ -284,7 +271,7 @@ export function ReelCanvas({ canvasRef }) {
       </div>
 
       <div className="rk-scene rk-s4">
-        <h3 className="rk-serif rk-s4-head">{words(daily.head, 's4-word')}</h3>
+        <h3 className="rk-soft rk-s4-head">{words(daily.head, 's4-word')}</h3>
         <span className="rk-caps rk-s4-meta" data-rk="s4-meta">{daily.meta}</span>
         <div className="rk-s4-rows">
           <div className="rk-caps rk-s4-ab" data-rk="s4-ab"><span>{daily.from}</span><span>{daily.to}</span></div>
@@ -308,7 +295,7 @@ export function ReelCanvas({ canvasRef }) {
       </div>
       <div className="rk-scene rk-s5c">
         <p className="rk-heavy rk-slam rk-s5c-type" data-rk="s5c-type"><span>{result.last[0]}</span><span>{result.last[1]}<b>.</b></span></p>
-        <p className="rk-serif rk-s5c-line" data-rk="s5c-line">{result.line}</p>
+        <p className="rk-soft rk-s5c-line" data-rk="s5c-line">{result.line}</p>
       </div>
 
       <div className="rk-scene rk-s6">
@@ -316,26 +303,19 @@ export function ReelCanvas({ canvasRef }) {
           <span className="rk-s6-mark" data-rk="s6-mark"><SideTwoMark /></span>
           <span className="rk-heavy rk-s6-word" data-rk="s6-type">{fin.word}</span>
         </div>
-        <p className="rk-serif rk-s6-line" data-rk="s6-line">{fin.line}</p>
+        <p className="rk-soft rk-s6-line" data-rk="s6-line">{fin.line}</p>
         <span className="rk-s6-rule" data-rk="s6-rule" />
         <div className="rk-caps rk-s6-meta">{fin.meta.map((m, i) => <span key={m} data-rk="s6-meta">{i === 2 ? <i /> : null}{m}</span>)}</div>
       </div>
 
       <div className="rk-grain" />
-      <div className="rk-hud rk-caps">
-        <span className="rk-corner rk-corner-tl" /><span className="rk-corner rk-corner-tr" /><span className="rk-corner rk-corner-bl" /><span className="rk-corner rk-corner-br" />
-        <span className="rk-hud-tl">[{reelCopy.hud}]</span>
-        <span className="rk-hud-tr" data-hud="chapter">[01 / HEUTE]</span>
-        <span className="rk-hud-bl" data-hud="time">00:00:00:00</span>
-        <span className="rk-hud-br">{Array.from({ length: CHAPTERS }, (_, i) => <i key={i} data-hud="box" className={i === 0 ? 'is-on' : ''} />)}<span data-hud="count">KAPITEL 1/{CHAPTERS}</span></span>
-        <span className="rk-hud-progress"><i data-rk="hud-progress" /></span>
-      </div>
+      <span className="rk-clock" data-rk="clock" />
     </div>
   )
 }
 
 export function buildReelAnimations(canvas, options) {
-  return animateTracks(canvas, reelTracks(), { total: REEL_TOTAL, ...options })
+  return animateTracks(canvas, reelTracks(), { total: BASE_TOTAL, duration: REEL_TOTAL, ...options })
 }
 
 export default function WorkflowReel() {
